@@ -18,7 +18,7 @@ subject1 = 'Old Subject'
 message1 = 'Old Message'
 
 def write_to_csv(data):
-    with open('database.csv', newline='', mode= 'a') as database2:
+    with open('portfo/database.csv', newline='', mode= 'a') as database2:
         email = data['email']
         subject = data['subject']
         message = data['message']
@@ -33,10 +33,11 @@ def submit_form():
             data = request.form.to_dict()
             write_to_csv(data)
             email1 = EmailMessage()
+            message1 = data['message']
             email1['from'] = 'Website Contact Form'
             email1['to'] = 'WilliamsonITBot@gmail.com'
             email1['subject'] = 'From: ' + data['email'] + ' Message: ' + data['subject']
-            email1.set_content(data['message'])
+            email1.set_content(message1)
             with smtplib.SMTP(host='smtp.gmail.com', port=587) as smtp:
                 smtp.ehlo()
                 smtp.starttls()
