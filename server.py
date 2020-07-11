@@ -35,7 +35,7 @@ def submit_form():
             email1 = EmailMessage()
             email1['from'] = 'Website Contact Form'
             email1['to'] = 'WilliamsonITBot@gmail.com'
-            email1['subject'] = 'From: ' + data['email'] + ' \nMessage: ' + data['subject']
+            email1['subject'] = 'From: ' + data['email'] + ' Message: ' + data['subject']
             email1.set_content(data['message'])
             with smtplib.SMTP(host='smtp.gmail.com', port=587) as smtp:
                 smtp.ehlo()
