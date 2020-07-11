@@ -4,8 +4,6 @@ app = Flask(__name__)
 
 import smtplib
 from email.message import EmailMessage
-from string import Template
-from pathlib import Path #os.path
 
 @app.route('/')
 def my_home():
@@ -14,13 +12,6 @@ def my_home():
 @app.route('/<string:page_name>')
 def html_page(page_name):
     return render_template(page_name)
-
-# def write_to_file(data):
-#     with open('database.txt', mode= 'a') as database:
-#         email = data['email']
-#         subject = data['subject']
-#         message = data['message']
-#         file = database.write(f'\n{email},{subject},{message}')
 
 name1 = 'Old Name'
 subject1 = 'Old Subject'
@@ -35,12 +26,6 @@ def write_to_csv(data):
         csv_writer.writerow([email,subject,message])
 
 
-# email1 = EmailMessage()
-# email1['from'] = name1
-# email1['to'] = 'WilliamsonITBot@gmail.com'
-# email1['subject'] = subject1
-# email1.set_content(message1)
-
 @app.route('/submit_form', methods=['POST', 'GET'])
 def submit_form():
     if request.method == 'POST':
@@ -48,10 +33,10 @@ def submit_form():
             data = request.form.to_dict()
             write_to_csv(data)
             email1 = EmailMessage()
-            email1['from'] = data['email']
+            email1['from'] = 'Website Contact Form'
             email1['to'] = 'WilliamsonITBot@gmail.com'
-            email1['subject'] = data['subject']
-            email1.set_content(message1)
+            email1['subject'] = 'From: ' + data['email'] + ' \nMessage: ' + data['subject']
+            email1.set_content(data['message'])
             with smtplib.SMTP(host='smtp.gmail.com', port=587) as smtp:
                 smtp.ehlo()
                 smtp.starttls()
