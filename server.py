@@ -2,6 +2,11 @@ from flask import Flask, render_template, request, redirect
 import csv
 app = Flask(__name__)
 
+import smtplib
+from email.message import EmailMessage
+from string import Template
+from pathlib import Path #os.path
+
 @app.route('/')
 def my_home():
     return render_template('index.html')
@@ -10,12 +15,16 @@ def my_home():
 def html_page(page_name):
     return render_template(page_name)
 
-def write_to_file(data):
-    with open('database.txt', mode= 'a') as database:
-        email = data['email']
-        subject = data['subject']
-        message = data['message']
-        file = database.write(f'\n{email},{subject},{message}')
+# def write_to_file(data):
+#     with open('database.txt', mode= 'a') as database:
+#         email = data['email']
+#         subject = data['subject']
+#         message = data['message']
+#         file = database.write(f'\n{email},{subject},{message}')
+
+name1 = 'Old Name'
+subject1 = 'Old Subject'
+message1 = 'Old Message'
 
 def write_to_csv(data):
     with open('database.csv', newline='', mode= 'a') as database2:
@@ -25,12 +34,29 @@ def write_to_csv(data):
         csv_writer = csv.writer(database2, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         csv_writer.writerow([email,subject,message])
 
+
+# email1 = EmailMessage()
+# email1['from'] = name1
+# email1['to'] = 'WilliamsonITBot@gmail.com'
+# email1['subject'] = subject1
+# email1.set_content(message1)
+
 @app.route('/submit_form', methods=['POST', 'GET'])
 def submit_form():
     if request.method == 'POST':
         try:
             data = request.form.to_dict()
             write_to_csv(data)
+            email1 = EmailMessage()
+            email1['from'] = data['email']
+            email1['to'] = 'WilliamsonITBot@gmail.com'
+            email1['subject'] = data['subject']
+            email1.set_content(message1)
+            with smtplib.SMTP(host='smtp.gmail.com', port=587) as smtp:
+                smtp.ehlo()
+                smtp.starttls()
+                smtp.login('WilliamsonITBot@gmail.com', 'Vivi1576!')
+                smtp.send_message(email1)
             return redirect('/thankyou.html')
         except:
             return 'did not save to database'

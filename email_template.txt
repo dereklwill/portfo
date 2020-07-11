@@ -1,0 +1,21 @@
+import smtplib
+from email.message import EmailMessage
+from string import Template
+from pathlib import Path #os.path
+
+name1 = 'This should be the name/email'
+subject1 = 'This should be the subject'
+message1 = 'This should be the message'
+email1 = EmailMessage()
+
+email1['from'] = name1
+email1['to'] = 'WilliamsonITBot@gmail.com'
+email1['subject'] = subject1
+
+email1.set_content(message1)
+
+with smtplib.SMTP(host='smtp.gmail.com', port=587) as smtp:
+    smtp.ehlo()
+    smtp.starttls()
+    smtp.login('WilliamsonITBot@gmail.com', 'Vivi1576!')
+    smtp.send_message(email1)
